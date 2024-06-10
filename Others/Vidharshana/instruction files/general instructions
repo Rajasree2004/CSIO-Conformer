@@ -1,0 +1,14 @@
+open jupyter server by going into terminal and then jupyter notebook
+
+Dataset in home/Dataset
+	RGB_images, Hit-GPRec-merged
+	
+notebook in Downloads/arohi_vit_boc_rgbd
+pytorch is used
+
+helper function used are in Downloads/going_modular
+
+explore Docker containerization to run smoothly
+
+notebooks
+CVit_wwc_hit.ipynb, aarohi_vit_wwc_rgbd.ipynb, Eff_VIT.ipynb
