@@ -57,6 +57,9 @@ def build_dataset(is_train, args):
     if args.data_set == 'CIFAR':
         dataset = datasets.CIFAR100(args.data_path, train=is_train, transform=transform)
         nb_classes = 100
+    elif args.data_set == 'RGB_images':
+        dataset = datasets.CIFAR100(args.data_path, train=is_train, transform=transform)
+        nb_classes = 100
     elif args.data_set == 'CIFAR10':
         dataset = datasets.CIFAR10(args.data_path, train=is_train, transform=transform)
         nb_classes = 10
