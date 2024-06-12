@@ -1,0 +1,22 @@
+-----------job 3: 31266-----------
+error file
+Loading debugger version 2023.1.0
+Loading dpl version 2022.1.0
+Loading compiler version 2023.1.0
+Loading tbb version 2021.9.0
+Loading compiler-rt version 2023.1.0
+Loading oclfpga version 2023.1.0
+
+Loading compiler/latest
+  Loading requirement: tbb/latest compiler-rt/latest oclfpga/latest
+Loading mpi version 2021.9.0
+Loading mkl version 2023.1.0
+Currently Loaded Modulefiles:
+ 1) gcc/11.2.0        4) tbb/latest           7) compiler/latest  
+ 2) debugger/latest   5) compiler-rt/latest   8) mpi/latest       
+ 3) dpl/latest        6) oclfpga/latest       9) mkl/latest       
+Traceback (most recent call last):
+  File "/scratch/srikanth/conformer.py", line 7, in <module>
+    from einops import rearrange
+ModuleNotFoundError: No module named 'einops'
+

@@ -1,8 +1,143 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+
+import torch
+from torch import nn
+
+from torchvision import transforms
+from torch.utils.data import Dataset, DataLoader
+from torch.cuda.amp import GradScaler,autocast
+import torch.optim as optim
+
+import sys
+import os
+import time
+import numpy as np
+import pandas as pd
+from PIL import Image
+from sklearn.utils import shuffle
+from sklearn.preprocessing import LabelEncoder , OneHotEncoder
+from sklearn.model_selection import train_test_split
+
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
+device
+
+root_path = r"/home/srikanth/Dataset/RGB_images"
+dataset_path = os.listdir(root_path)
+dataset_path
+
+
+class_labels = []
+
+
+for item in dataset_path:
+    #print(item)
+    all_objects = os.listdir(root_path + '/' +item)
+    for top_object in all_objects:
+        sub_objects = os.listdir(root_path  + '/' +item + '/' +top_object)
+        for sub_object in sub_objects:
+            images = os.listdir(root_path + '/' +item + '/' +top_object + '/' +sub_object)
+            for image in images:
+                class_labels.append((item,str(root_path + '/' +item + '/' +top_object + '/' +sub_object +'/' +image)))
+# class_labels
+df = pd.DataFrame(data=class_labels, columns=['labels', 'image'])
+# df
+y=list(df['labels'].values)
+# y
+image=df['image']
+# image
+
+
+images, y= shuffle(image,y, random_state=1)
+train_x, test_x, train_y, test_y = train_test_split(images, y, test_size=0.2, random_state=415)
+test_x = test_x.reset_index(drop=True)
+train_x = train_x.reset_index(drop=True)
+test_x, val_x, test_y, val_y = train_test_split(test_x,test_y, test_size=0.5, random_state=415)
+test_x = test_x.reset_index(drop=True)
+#train_y=list(train_y)
+train_df=pd.DataFrame({'filepaths':train_x,'labels':train_y})
+valid_df=pd.DataFrame({'filepaths':val_x,'labels':val_y})
+test_df=pd.DataFrame({'filepaths':test_x,'labels':test_y})
+
+
+classes=list(train_df['labels'].unique())
+class_count=len(classes)
+
+
+labels = df['labels'].unique()
+num_labels = len(labels)
+label2id, id2label = dict(), dict()
+for i, label in enumerate(labels):
+    label2id[label] = i
+    id2label[i] = label
+
+print(label2id)
+print(id2label)
+
+
+class ImageDataset():
+    def __init__(self, df, transform=None):
+        self.df = df
+        self.transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Resize((64, 64), antialias=True),
+        transforms.Normalize( mean= [0.51158103, 0.47950193, 0.46153474],
+                             std=[0.22355489, 0.22948845, 0.24873442])
+        ])
+        self.label_mapping = label2id
+    # class ImageDataset(Dataset):
+    # def __init__(self, df, label2id, input_size=224, transform=None):
+    #     self.df = df
+    #     self.label_mapping = label2id
+    #     resize_value = self.calculate_resize_value(input_size)
+    #     self.transform = transform if transform else transforms.Compose([
+    #         transforms.Resize((resize_value, resize_value), antialias=True),
+    #         transforms.CenterCrop(input_size),
+    #         transforms.ToTensor(),
+    #         transforms.Normalize(mean=[0.51158103, 0.47950193, 0.46153474],
+    #                              std=[0.22355489, 0.22948845, 0.24873442])
+    #     ])
+
+    # def calculate_resize_value(self, input_size):
+    #     return int((256 / 224) * input_size)
+
+    def __len__(self):
+        return len(self.df)
+
+    def get_images(self, idx):
+        return self.transform(Image.open(self.df.iloc[idx]['filepaths']))
+
+    def get_labels(self, idx):
+        label = self.df.iloc[idx]['labels']
+        return torch.tensor(self.label_mapping[label], dtype=torch.long)
+
+    def __getitem__(self, idx):
+        train_images = self.get_images(idx)
+        train_labels = self.get_labels(idx)
+
+        return train_images, train_labels
+
+
+train_dataset = ImageDataset(train_df, transform=transforms)
+val_dataset = ImageDataset(valid_df, transform=transforms)
+test_dataset = ImageDataset(test_df, transform=transforms)
+
+
+
+# Create data loaders
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
+test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
+
+
+# MODEL
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from functools import partial
-
 from timm.models.layers import DropPath, trunc_normal_
 
 class Mlp(nn.Module):
@@ -443,3 +578,150 @@ class Conformer(nn.Module):
         tran_cls = self.trans_cls_head(x_t[:, 0])
 
         return [conv_cls, tran_cls]
+
+
+model = Conformer(patch_size=16, channel_ratio=6, embed_dim=576, depth=12,
+                      num_heads=9, mlp_ratio=4, qkv_bias=True)
+model.to(device)
+optimizer = optim.Adam(model.parameters(), lr=0.0001,  weight_decay=0.01)
+criterion = nn.CrossEntropyLoss()
+num_epochs = 40
+
+from tqdm import tqdm
+import torch
+
+def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device):
+    best_acc = 0.0
+    min_loss = min_val_loss
+
+    train_losses = []
+    train_accs = []
+    val_losses = []
+    val_accs = []
+
+    for epoch in range(num_epochs):
+        print(f'Epoch {epoch}/{num_epochs - 1}')
+        print('-' * 10)
+        model.train()  # Set model to training mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        # Using tqdm for progress tracking
+        for inputs, labels in tqdm(train_loader, desc=f'Epoch {epoch}', leave=False):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward
+            # track history if only in train
+            with torch.set_grad_enabled(True):
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+                # backward + optimize only if in training phase
+                loss.backward()
+                optimizer.step()
+
+            # statistics
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(train_loader.dataset)
+        epoch_acc = running_corrects.double() / len(train_loader.dataset)
+
+        train_losses.append(epoch_loss)
+        train_accs.append(epoch_acc)
+        print(f'Train Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Validation phase
+        model.eval()  # Set model to evaluate mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        for inputs, labels in val_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            with torch.no_grad():
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(val_loader.dataset)
+        epoch_acc = running_corrects.double() / len(val_loader.dataset)
+
+        val_losses.append(epoch_loss)
+        val_accs.append(epoch_acc)
+        print(f'Val Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Update the learning rate
+        # scheduler.step()  # Uncomment if using a learning rate scheduler
+
+        # Save the model if it has the best validation accuracy so far
+        if epoch_acc > best_acc:
+            best_acc = epoch_acc
+            state = {
+                'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'min_loss': epoch_loss
+            }
+        torch.save(state, 'weight/conformer-wwc-rgbd.pth')
+
+    return train_losses, train_accs, val_losses, val_accs, min_loss
+
+
+# Define the initial minimum validation loss
+min_val_loss = float('inf')
+
+# Call the training function with the appropriate data loaders
+train_losses, train_accs, val_losses, val_accs, min_loss = trainVal(
+    model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device
+)
+
+
+# PLOTTING
+# 
+
+
+import matplotlib.pyplot as plt
+
+# Convert the tensors to NumPy arrays
+
+train_losses = torch.tensor(train_losses)
+val_losses = torch.tensor(val_losses)
+train_accs = torch.tensor(train_accs)
+val_accs = torch.tensor(val_accs)
+
+plt.figure(figsize=(10, 5))
+plt.subplot(1, 2, 1)
+plt.plot(train_losses, label='Training Loss')
+plt.plot(val_losses, label='Validation Loss')
+plt.legend()
+plt.title('Loss')
+
+plt.subplot(1, 2, 2)
+plt.plot(train_accs, label='Training Accuracy')
+plt.plot(val_accs, label='Validation Accuracy')
+plt.legend()
+plt.title('Accuracy')
+
+plt.show()
+
+
