@@ -37,7 +37,7 @@ from PIL import Image
 import numpy as np
 
 # Define the root directory of your dataset
-root_dir = '/home/srikanth/Dataset/RGB_images'
+root_dir = '/home/srikanth/Dataset/Hit-GPRec-merged'
 num_images_per_folder = 500  # Number of images to use from each subfolder
 
 # Initialize an empty list to store image paths
@@ -74,3 +74,8 @@ print("Standard deviation RGB values:", std_rgb)
 #for 300 images
 # Mean RGB values: [0.51160183 0.4794664  0.46147034]
 # Standard deviation RGB values: [0.22350493 0.22953787 0.24877995]
+
+
+#hitgprec 500 images
+#Mean RGB values: [0.74523671 0.75350752 0.73756239]
+# Standard deviation RGB values: [0.23549667 0.23590666 0.25743267]

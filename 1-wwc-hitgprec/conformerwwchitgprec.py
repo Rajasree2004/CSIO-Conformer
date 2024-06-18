@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-# coding: utf-8
 
 
 import torch
 from torch import nn
+from einops import rearrange
 
 from torchvision import transforms
 from torch.utils.data import Dataset, DataLoader
@@ -21,33 +20,28 @@ from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.model_selection import train_test_split
 
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-device
 
-root_path = r"/home/srikanth/Dataset/RGB_images"
+device = "cuda" if torch.cuda.is_available() else "cpu"
+
+root_path = r"/home/srikanth/Dataset/Hit-GPRec-merged"
 dataset_path = os.listdir(root_path)
-dataset_path
+
 
 
 class_labels = []
-
-
 for item in dataset_path:
     #print(item)
-    all_objects = os.listdir(root_path + '/' +item)
-    for top_object in all_objects:
+    all_classes = os.listdir(root_path + '/' +item)
+    for top_object in all_classes:
         sub_objects = os.listdir(root_path  + '/' +item + '/' +top_object)
         for sub_object in sub_objects:
-            images = os.listdir(root_path + '/' +item + '/' +top_object + '/' +sub_object)
-            for image in images:
-                class_labels.append((item,str(root_path + '/' +item + '/' +top_object + '/' +sub_object +'/' +image)))
-# class_labels
+            class_labels.append((item,str(root_path + '/' +item + '/' +top_object + '/' +sub_object)))
+            
 df = pd.DataFrame(data=class_labels, columns=['labels', 'image'])
-# df
 y=list(df['labels'].values)
-# y
 image=df['image']
-# image
+
+
 
 
 images, y= shuffle(image,y, random_state=1)
@@ -82,26 +76,11 @@ class ImageDataset():
         self.df = df
         self.transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Resize((64, 64), antialias=True),
-        transforms.Normalize( mean= [0.51158103, 0.47950193, 0.46153474],
-                             std=[0.22355489, 0.22948845, 0.24873442])
+        transforms.Resize((63, 63), antialias=True),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                             std=[0.5, 0.5, 0.5])
         ])
         self.label_mapping = label2id
-    # class ImageDataset(Dataset):
-    # def __init__(self, df, label2id, input_size=224, transform=None):
-    #     self.df = df
-    #     self.label_mapping = label2id
-    #     resize_value = self.calculate_resize_value(input_size)
-    #     self.transform = transform if transform else transforms.Compose([
-    #         transforms.Resize((resize_value, resize_value), antialias=True),
-    #         transforms.CenterCrop(input_size),
-    #         transforms.ToTensor(),
-    #         transforms.Normalize(mean=[0.51158103, 0.47950193, 0.46153474],
-    #                              std=[0.22355489, 0.22948845, 0.24873442])
-    #     ])
-
-    # def calculate_resize_value(self, input_size):
-    #     return int((256 / 224) * input_size)
 
     def __len__(self):
         return len(self.df)
@@ -125,19 +104,16 @@ val_dataset = ImageDataset(valid_df, transform=transforms)
 test_dataset = ImageDataset(test_df, transform=transforms)
 
 
-
-# Create data loaders
 train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
 test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False)
 
 
-# MODEL
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from functools import partial
+
 from timm.models.layers import DropPath, trunc_normal_
 
 class Mlp(nn.Module):
@@ -438,6 +414,7 @@ class ConvTransBlock(nn.Module):
         return x, x_t
 
 
+
 class Conformer(nn.Module):
 
     def __init__(self, patch_size=16, in_chans=3, num_classes=1000, base_channel=64, channel_ratio=4, num_med_block=0,
@@ -580,14 +557,16 @@ class Conformer(nn.Module):
         return [conv_cls, tran_cls]
 
 
+
 model = Conformer(patch_size=16, channel_ratio=6, embed_dim=576, depth=12,
                       num_heads=9, mlp_ratio=4, qkv_bias=True)
 model.to(device)
 optimizer = optim.Adam(model.parameters(), lr=0.0001,  weight_decay=0.01)
 criterion = nn.CrossEntropyLoss()
-num_epochs = 40
+num_epochs = 2
 
-from tqdm import tqdm
+
+
 import torch
 
 def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device):
@@ -606,31 +585,32 @@ def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader
         running_loss = 0.0
         running_corrects = 0
 
-        # Using tqdm for progress tracking
-        for inputs, labels in tqdm(train_loader, desc=f'Epoch {epoch}', leave=False):
+        # Training phase
+        for inputs, labels in train_loader:
             inputs = inputs.to(device)
             labels = labels.to(device)
 
-            # zero the parameter gradients
+            # Zero the gradients
             optimizer.zero_grad()
 
-            # forward
-            # track history if only in train
-            with torch.set_grad_enabled(True):
-                outputs = model(inputs)
-                if isinstance(outputs, list):
-                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
-                    loss = sum(loss_list)
-                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
-                else:
-                    loss = criterion(outputs, labels)
-                    _, preds = torch.max(outputs, 1)
+            # Forward pass
+            outputs = model(inputs)
 
-                # backward + optimize only if in training phase
-                loss.backward()
-                optimizer.step()
+            # Calculate loss
+            if isinstance(outputs, list):
+                loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                loss = sum(loss_list)
+                # Combine predictions if needed (e.g., for ensembling)
+                preds = torch.max(outputs[0] + outputs[1], 1)[1]  # Example: summing logits
+            else:
+                loss = criterion(outputs, labels)
+                _, preds = torch.max(outputs, 1)
 
-            # statistics
+            # Backward pass and optimize
+            loss.backward()
+            optimizer.step()
+
+            # Statistics
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
 
@@ -646,22 +626,27 @@ def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader
         running_loss = 0.0
         running_corrects = 0
 
-        for inputs, labels in val_loader:
-            inputs = inputs.to(device)
-            labels = labels.to(device)
+        with torch.no_grad():
+            for inputs, labels in val_loader:
+                inputs = inputs.to(device)
+                labels = labels.to(device)
 
-            with torch.no_grad():
+                # Forward pass
                 outputs = model(inputs)
+
+                # Calculate loss
                 if isinstance(outputs, list):
                     loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
                     loss = sum(loss_list)
-                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                    # Combine predictions if needed (e.g., for ensembling)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]  # Example: summing logits
                 else:
                     loss = criterion(outputs, labels)
                     _, preds = torch.max(outputs, 1)
 
-            running_loss += loss.item() * inputs.size(0)
-            running_corrects += torch.sum(preds == labels.data)
+                # Statistics
+                running_loss += loss.item() * inputs.size(0)
+                running_corrects += torch.sum(preds == labels.data)
 
         epoch_loss = running_loss / len(val_loader.dataset)
         epoch_acc = running_corrects.double() / len(val_loader.dataset)
@@ -669,9 +654,6 @@ def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader
         val_losses.append(epoch_loss)
         val_accs.append(epoch_acc)
         print(f'Val Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
-
-        # Update the learning rate
-        # scheduler.step()  # Uncomment if using a learning rate scheduler
 
         # Save the model if it has the best validation accuracy so far
         if epoch_acc > best_acc:
@@ -682,22 +664,27 @@ def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader
                 'optimizer': optimizer.state_dict(),
                 'min_loss': epoch_loss
             }
-        torch.save(state, 'weight/conformer-wwc-rgbd.pth')
+            torch.save(state, 'conformer-wwc-hitgprec-63.pth')
 
     return train_losses, train_accs, val_losses, val_accs, min_loss
 
 
 # Define the initial minimum validation loss
+# if epoch_acc > best_acc:
+            # best_acc = epoch_acc
+            # state = {
+                # 'epoch': epoch + 1,
+                # 'state_dict': model.state_dict(),
+                # 'optimizer': optimizer.state_dict(),
+                # 'min_loss': epoch_loss
+            # }
+        # torch.save(state, 'weight/conformer-wwc-hitgprec.pth')
 min_val_loss = float('inf')
 
 # Call the training function with the appropriate data loaders
 train_losses, train_accs, val_losses, val_accs, min_loss = trainVal(
     model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device
 )
-
-
-# PLOTTING
-# 
 
 
 import matplotlib.pyplot as plt
@@ -721,7 +708,66 @@ plt.plot(train_accs, label='Training Accuracy')
 plt.plot(val_accs, label='Validation Accuracy')
 plt.legend()
 plt.title('Accuracy')
+plt.savefig('plothitgprec.png', format='png')
 
-plt.show()
 
+import torch
+
+
+test_losses = []
+test_accuracies = []
+
+all_preds = []
+all_labels = []
+
+model.eval()
+total_test_loss = 0.0
+correct_test = 0
+
+with torch.no_grad():
+    for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = model(images)
+
+        # Calculate loss
+        if isinstance(outputs, list):
+            loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+            test_loss = sum(loss_list)
+            # Combine predictions if needed (e.g., for ensembling)
+            preds = torch.max(outputs[0] + outputs[1], 1)[1]  # Example: summing logits
+        else:
+            test_loss = criterion(outputs, labels)
+            preds = outputs.argmax(dim=1, keepdim=True)
+
+        # Compute total test loss
+        total_test_loss += test_loss.item() * images.size(0)
+
+        # Compute accuracy
+        correct_test += preds.eq(labels.view_as(preds)).sum().item()
+
+        # Gather predictions and true labels for confusion matrix
+        all_preds.extend(preds.cpu().numpy())
+        all_labels.extend(labels.cpu().numpy())
+
+# Calculate average test loss and accuracy
+average_test_loss = total_test_loss / len(test_loader.dataset)
+test_accuracy = 100. * correct_test / len(test_loader.dataset)
+
+test_losses.append(average_test_loss)
+test_accuracies.append(test_accuracy)
+
+print("Test Loss: {:.4f}".format(average_test_loss))
+print("Test Accuracy: {:.2f}%".format(test_accuracy))
+
+
+
+from sklearn.metrics import confusion_matrix, classification_report
+# Confusion Matrix
+conf_matrix = confusion_matrix(all_labels, all_preds)
+print("Confusion Matrix:")
+print(conf_matrix)
+# Classification Report
+class_report = classification_report(all_labels, all_preds)
+print("Classification Report:")
+print(class_report)
 

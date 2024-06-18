@@ -9,7 +9,7 @@
 cd $PBS_O_WORKDIR
 
 # Setup the compiler environment for Intel OneAPI 2023
-module use /cm/sharked/modulefiles/oneapi-2023
+module use /cm/shared/modulefiles/oneapi-2023
 module load debugger/latest
 module load dpl/latest
 module load compiler/latest
