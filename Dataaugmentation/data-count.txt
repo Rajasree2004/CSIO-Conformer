@@ -1,0 +1,817 @@
+RGB_IMAGES
+Folder:Palmar wrist neutral/coffee_mug,Items:   4866      
+Folder:Palmar wrist neutral/food_can,Items:     11118
+Folder:Palmar wrist neutral/greens,Items:       2860
+Folder:Palmar wrist neutral/pitcher,Items:      1672
+Folder:Palmar wrist neutral/soda_can,Items:     3555
+Folder:Palmar wrist neutral/water_bottle,Items: 5691
+======================================================
+Folder:Palmar wrist pronated/apple,Items:       3098
+Folder:Palmar wrist pronated/ball,Items:        5561
+Folder:Palmar wrist pronated/banana,Items:      2826
+Folder:Palmar wrist pronated/bell_pepper,Items: 3784
+Folder:Palmar wrist pronated/camera,Items:      1725
+Folder:Palmar wrist pronated/flashlight,Items:  2944
+Folder:Palmar wrist pronated/food_cup,Items:    4010
+Folder:Palmar wrist pronated/food_jar,Items:    4784
+Folder:Palmar wrist pronated/kleenex,Items:     3822
+Folder:Palmar wrist pronated/lemon,Items:       3747
+Folder:Palmar wrist pronated/lime,Items:        2514
+Folder:Palmar wrist pronated/orange,Items:      2834
+Folder:Palmar wrist pronated/peach,Items:       2079
+Folder:Palmar wrist pronated/pitcher,Items:     1672
+Folder:Palmar wrist pronated/potato,Items:      3698
+Folder:Palmar wrist pronated/sponge,Items:      8775
+Folder:Palmar wrist pronated/tomato,Items:      5237
+======================================================
+Folder:Pinch/comb,Items:                        2333
+Folder:Pinch/food_bag,Items:                    6302
+Folder:Pinch/glue_stick,Items:                  4677
+Folder:Pinch/keyboard,Items:                    2928
+Folder:Pinch/marker,Items:                      6844
+Folder:Pinch/plate,Items:                       4389
+Folder:Pinch/rubber_eraser,Items:               3127
+Folder:Pinch/shampoo,Items:                     4822
+Folder:Pinch/toothbrush,Items:                  2968
+======================================================
+Folder:Tripod/binder,Items:                     2129
+Folder:Tripod/bowl,Items:                       3884
+Folder:Tripod/calculator,Items:                 2934
+Folder:Tripod/cap,Items:                        2551
+Folder:Tripod/cell_phone,Items:                 2712
+Folder:Tripod/cereal_box,Items:                 2929
+Folder:Tripod/dry_battery,Items:                3295
+Folder:Tripod/food_box,Items:                   9524
+Folder:Tripod/garlic,Items:                     5534
+Folder:Tripod/hand_towel,Items:                 3932
+Folder:Tripod/instant_noodles,Items:            6318
+Folder:Tripod/lightbulb,Items:                  2446
+Folder:Tripod/mushroom,Items:                   2279
+Folder:Tripod/notebook,Items:                   3980
+Folder:Tripod/onion,Items:                      4687
+Folder:Tripod/pear,Items:                       4186
+Folder:Tripod/scissors,Items:                   2371
+Folder:Tripod/stapler,Items:                    5084
+=======================================================
+Total Items: 202037
+
+
+
+______________________________________________________________________________________________________
+
+Palmar wrist neutral: 35646
+Palmar wrist neutral/coffee_mug:
+    coffee_mug_1: 548
+    coffee_mug_2: 555
+    coffee_mug_3: 553
+    coffee_mug_4: 543
+    coffee_mug_5: 534
+    coffee_mug_6: 541
+    coffee_mug_7: 806
+    coffee_mug_8: 786
+Palmar wrist neutral/food_can:
+    food_can_1: 822
+    food_can_10: 777
+    food_can_11: 801
+    food_can_12: 774
+    food_can_13: 822
+    food_can_14: 790
+    food_can_2: 804
+    food_can_3: 785
+    food_can_4: 810
+    food_can_5: 777
+    food_can_6: 774
+    food_can_7: 812
+    food_can_8: 789
+    food_can_9: 781
+Palmar wrist neutral/greens:
+    greens_1: 728
+    greens_2: 658
+    greens_3: 719
+    greens_4: 755
+Palmar wrist neutral/pitcher:
+    pitcher_1: 566
+    pitcher_2: 549
+    pitcher_3: 557
+Palmar wrist neutral/soda_can:
+    soda_can_1: 628
+    soda_can_2: 586
+    soda_can_3: 561
+    soda_can_4: 606
+    soda_can_5: 589
+    soda_can_6: 585
+Palmar wrist neutral/water_bottle:
+    water_bottle_1: 561
+    water_bottle_10: 785
+    water_bottle_2: 532
+    water_bottle_3: 568
+    water_bottle_4: 559
+    water_bottle_5: 562
+    water_bottle_6: 582
+    water_bottle_7: 768
+    water_bottle_9: 774
+Palmar wrist pronated: 63110
+Palmar wrist pronated/apple:
+    apple_1: 607
+    apple_2: 622
+    apple_3: 607
+    apple_4: 633
+    apple_5: 629
+Palmar wrist pronated/ball:
+    ball_1: 820
+    ball_2: 783
+    ball_3: 809
+    ball_4: 800
+    ball_5: 794
+    ball_6: 792
+    ball_7: 763
+Palmar wrist pronated/banana:
+    banana_1: 726
+    banana_2: 714
+    banana_3: 699
+    banana_4: 687
+Palmar wrist pronated/bell_pepper:
+    bell_pepper_1: 634
+    bell_pepper_2: 658
+    bell_pepper_3: 631
+    bell_pepper_4: 636
+    bell_pepper_5: 607
+    bell_pepper_6: 618
+Palmar wrist pronated/camera:
+    camera_1: 623
+    camera_2: 573
+    camera_3: 529
+Palmar wrist pronated/flashlight:
+    flashlight_1: 605
+    flashlight_2: 602
+    flashlight_3: 588
+    flashlight_4: 566
+    flashlight_5: 583
+Palmar wrist pronated/food_cup:
+    food_cup_1: 786
+    food_cup_2: 810
+    food_cup_3: 806
+    food_cup_4: 810
+    food_cup_5: 798
+Palmar wrist pronated/food_jar:
+    food_jar_1: 768
+    food_jar_2: 805
+    food_jar_3: 788
+    food_jar_4: 806
+    food_jar_5: 780
+    food_jar_6: 837
+Palmar wrist pronated/kleenex:
+    kleenex_1: 776
+    kleenex_2: 784
+    kleenex_3: 804
+    kleenex_4: 645
+    kleenex_5: 813
+Palmar wrist pronated/lemon:
+    lemon_1: 593
+    lemon_2: 666
+    lemon_3: 614
+    lemon_4: 602
+    lemon_5: 654
+    lemon_6: 618
+Palmar wrist pronated/lime:
+    lime_1: 630
+    lime_2: 640
+    lime_3: 602
+    lime_4: 642
+Palmar wrist pronated/orange:
+    orange_1: 710
+    orange_2: 713
+    orange_3: 707
+    orange_4: 704
+Palmar wrist pronated/peach:
+    peach_1: 674
+    peach_2: 704
+    peach_3: 701
+Palmar wrist pronated/pitcher:
+    pitcher_1: 566
+    pitcher_2: 549
+    pitcher_3: 557
+Palmar wrist pronated/potato:
+    potato_1: 599
+    potato_2: 595
+    potato_3: 634
+    potato_4: 621
+    potato_5: 619
+    potato_6: 630
+Palmar wrist pronated/sponge:
+    sponge_1: 631
+    sponge_10: 785
+    sponge_11: 780
+    sponge_12: 777
+    sponge_2: 589
+    sponge_3: 610
+    sponge_4: 632
+    sponge_5: 795
+    sponge_6: 807
+    sponge_7: 768
+    sponge_8: 802
+    sponge_9: 799
+Palmar wrist pronated/tomato:
+    tomato_1: 681
+    tomato_2: 634
+    tomato_3: 621
+    tomato_4: 588
+    tomato_5: 690
+    tomato_6: 663
+    tomato_7: 660
+    tomato_8: 700
+Pinch: 38390
+Pinch/comb:
+    comb_1: 565
+    comb_2: 579
+    comb_3: 605
+    comb_5: 584
+Pinch/food_bag:
+    food_bag_1: 788
+    food_bag_2: 794
+    food_bag_3: 782
+    food_bag_4: 798
+    food_bag_5: 786
+    food_bag_6: 790
+    food_bag_7: 792
+    food_bag_8: 772
+Pinch/glue_stick:
+    glue_stick_1: 801
+    glue_stick_2: 773
+    glue_stick_3: 756
+    glue_stick_4: 773
+    glue_stick_5: 797
+    glue_stick_6: 777
+Pinch/keyboard:
+    keyboard_1: 709
+    keyboard_2: 586
+    keyboard_3: 562
+    keyboard_4: 524
+    keyboard_5: 547
+Pinch/marker:
+    marker_1: 806
+    marker_2: 810
+    marker_3: 761
+    marker_4: 789
+    marker_5: 786
+    marker_6: 807
+    marker_7: 689
+    marker_8: 720
+    marker_9: 676
+Pinch/plate:
+    plate_1: 712
+    plate_2: 675
+    plate_3: 506
+    plate_4: 675
+    plate_5: 565
+    plate_6: 557
+    plate_7: 699
+Pinch/rubber_eraser:
+    rubber_eraser_1: 784
+    rubber_eraser_2: 781
+    rubber_eraser_3: 772
+    rubber_eraser_4: 790
+Pinch/shampoo:
+    shampoo_1: 782
+    shampoo_2: 783
+    shampoo_3: 833
+    shampoo_4: 852
+    shampoo_5: 773
+    shampoo_6: 799
+Pinch/toothbrush:
+    toothbrush_1: 595
+    toothbrush_2: 605
+    toothbrush_3: 600
+    toothbrush_4: 583
+    toothbrush_5: 585
+Tripod: 70775
+Tripod/binder:
+    binder_1: 710
+    binder_2: 692
+    binder_3: 727
+Tripod/bowl:
+    bowl_1: 580
+    bowl_2: 582
+    bowl_3: 580
+    bowl_4: 554
+    bowl_5: 806
+    bowl_6: 782
+Tripod/calculator:
+    calculator_1: 580
+    calculator_2: 632
+    calculator_3: 604
+    calculator_4: 561
+    calculator_5: 557
+Tripod/cap:
+    cap_1: 628
+    cap_2: 668
+    cap_3: 620
+    cap_4: 635
+Tripod/cell_phone:
+    cell_phone_1: 544
+    cell_phone_2: 536
+    cell_phone_3: 545
+    cell_phone_4: 542
+    cell_phone_5: 545
+Tripod/cereal_box:
+    cereal_box_1: 570
+    cereal_box_2: 607
+    cereal_box_3: 615
+    cereal_box_4: 595
+    cereal_box_5: 542
+Tripod/dry_battery:
+    dry_battery_1: 567
+    dry_battery_2: 555
+    dry_battery_3: 545
+    dry_battery_4: 569
+    dry_battery_5: 526
+    dry_battery_6: 533
+Tripod/food_box:
+    food_box_1: 787
+    food_box_10: 800
+    food_box_11: 782
+    food_box_12: 789
+    food_box_2: 803
+    food_box_3: 779
+    food_box_4: 825
+    food_box_5: 822
+    food_box_6: 771
+    food_box_7: 797
+    food_box_8: 788
+    food_box_9: 781
+Tripod/garlic:
+    garlic_1: 780
+    garlic_2: 798
+    garlic_3: 789
+    garlic_4: 789
+    garlic_5: 793
+    garlic_6: 784
+    garlic_7: 801
+Tripod/hand_towel:
+    hand_towel_1: 783
+    hand_towel_2: 772
+    hand_towel_3: 797
+    hand_towel_4: 794
+    hand_towel_5: 786
+Tripod/instant_noodles:
+    instant_noodles_1: 771
+    instant_noodles_2: 787
+    instant_noodles_3: 803
+    instant_noodles_4: 801
+    instant_noodles_5: 793
+    instant_noodles_6: 814
+    instant_noodles_7: 780
+    instant_noodles_8: 769
+Tripod/lightbulb:
+    lightbulb_1: 615
+    lightbulb_2: 578
+    lightbulb_3: 619
+    lightbulb_4: 634
+Tripod/mushroom:
+    mushroom_1: 778
+    mushroom_2: 759
+    mushroom_3: 742
+Tripod/notebook:
+    notebook_1: 798
+    notebook_2: 774
+    notebook_3: 810
+    notebook_4: 793
+    notebook_5: 805
+Tripod/onion:
+    onion_1: 772
+    onion_2: 767
+    onion_3: 792
+    onion_4: 770
+    onion_5: 797
+    onion_6: 789
+Tripod/pear:
+    pear_1: 674
+    pear_2: 669
+    pear_3: 683
+    pear_4: 664
+    pear_7: 761
+    pear_8: 735
+Tripod/scissors:
+    scissors_1: 625
+    scissors_2: 562
+    scissors_3: 601
+    scissors_4: 583
+Tripod/stapler:
+    stapler_1: 595
+    stapler_2: 578
+    stapler_3: 577
+    stapler_4: 586
+    stapler_5: 580
+    stapler_6: 561
+    stapler_7: 823
+    stapler_8: 784
+______________________________________________________________________________________________________
+
+    Tripod: 0
+Palmar wrist neutral:
+    coffee_mug: 0
+    food_can: 0
+    greens: 0
+    pitcher: 0
+    soda_can: 0
+    water_bottle: 0
+Palmar wrist neutral/coffee_mug:
+    coffee_mug_1: 806
+    coffee_mug_2: 806
+    coffee_mug_3: 806
+    coffee_mug_4: 806
+    coffee_mug_5: 806
+    coffee_mug_6: 806
+    coffee_mug_7: 806
+    coffee_mug_8: 806
+Palmar wrist neutral/food_can:
+    food_can_1: 822
+    food_can_10: 822
+    food_can_11: 822
+    food_can_12: 822
+    food_can_13: 822
+    food_can_14: 822
+    food_can_2: 822
+    food_can_3: 822
+    food_can_4: 822
+    food_can_5: 822
+    food_can_6: 822
+    food_can_7: 822
+    food_can_8: 822
+    food_can_9: 822
+Palmar wrist neutral/greens:
+    greens_1: 755
+    greens_2: 755
+    greens_3: 755
+    greens_4: 755
+Palmar wrist neutral/pitcher:
+    pitcher_1: 566
+    pitcher_2: 566
+    pitcher_3: 566
+Palmar wrist neutral/soda_can:
+    soda_can_1: 628
+    soda_can_2: 628
+    soda_can_3: 628
+    soda_can_4: 628
+    soda_can_5: 628
+    soda_can_6: 628
+Palmar wrist neutral/water_bottle:
+    water_bottle_1: 785
+    water_bottle_10: 785
+    water_bottle_2: 785
+    water_bottle_3: 785
+    water_bottle_4: 785
+    water_bottle_5: 785
+    water_bottle_6: 785
+    water_bottle_7: 785
+    water_bottle_9: 785
+Palmar wrist pronated:
+    apple: 0
+    ball: 0
+    banana: 0
+    bell_pepper: 0
+    camera: 0
+    flashlight: 0
+    food_cup: 0
+    food_jar: 0
+    kleenex: 0
+    lemon: 0
+    lime: 0
+    orange: 0
+    peach: 0
+    pitcher: 0
+    potato: 0
+    sponge: 0
+    tomato: 0
+Palmar wrist pronated/apple:
+    apple_1: 633
+    apple_2: 633
+    apple_3: 633
+    apple_4: 633
+    apple_5: 633
+Palmar wrist pronated/ball:
+    ball_1: 820
+    ball_2: 820
+    ball_3: 820
+    ball_4: 820
+    ball_5: 820
+    ball_6: 820
+    ball_7: 820
+Palmar wrist pronated/banana:
+    banana_1: 726
+    banana_2: 726
+    banana_3: 726
+    banana_4: 726
+Palmar wrist pronated/bell_pepper:
+    bell_pepper_1: 658
+    bell_pepper_2: 658
+    bell_pepper_3: 658
+    bell_pepper_4: 658
+    bell_pepper_5: 658
+    bell_pepper_6: 658
+Palmar wrist pronated/camera:
+    camera_1: 623
+    camera_2: 623
+    camera_3: 623
+Palmar wrist pronated/flashlight:
+    flashlight_1: 605
+    flashlight_2: 605
+    flashlight_3: 605
+    flashlight_4: 605
+    flashlight_5: 605
+Palmar wrist pronated/food_cup:
+    food_cup_1: 810
+    food_cup_2: 810
+    food_cup_3: 810
+    food_cup_4: 810
+    food_cup_5: 810
+Palmar wrist pronated/food_jar:
+    food_jar_1: 837
+    food_jar_2: 837
+    food_jar_3: 837
+    food_jar_4: 837
+    food_jar_5: 837
+    food_jar_6: 837
+Palmar wrist pronated/kleenex:
+    kleenex_1: 813
+    kleenex_2: 813
+    kleenex_3: 813
+    kleenex_4: 813
+    kleenex_5: 813
+Palmar wrist pronated/lemon:
+    lemon_1: 666
+    lemon_2: 666
+    lemon_3: 666
+    lemon_4: 666
+    lemon_5: 666
+    lemon_6: 666
+Palmar wrist pronated/lime:
+    lime_1: 642
+    lime_2: 642
+    lime_3: 642
+    lime_4: 642
+Palmar wrist pronated/orange:
+    orange_1: 713
+    orange_2: 713
+    orange_3: 713
+    orange_4: 713
+Palmar wrist pronated/peach:
+    peach_1: 704
+    peach_2: 704
+    peach_3: 704
+Palmar wrist pronated/pitcher:
+    pitcher_1: 566
+    pitcher_2: 566
+    pitcher_3: 566
+Palmar wrist pronated/potato:
+    potato_1: 634
+    potato_2: 634
+    potato_3: 634
+    potato_4: 634
+    potato_5: 634
+    potato_6: 634
+Palmar wrist pronated/sponge:
+    sponge_1: 807
+    sponge_10: 807
+    sponge_11: 807
+    sponge_12: 807
+    sponge_2: 807
+    sponge_3: 807
+    sponge_4: 807
+    sponge_5: 807
+    sponge_6: 807
+    sponge_7: 807
+    sponge_8: 807
+    sponge_9: 807
+Palmar wrist pronated/tomato:
+    tomato_1: 700
+    tomato_2: 700
+    tomato_3: 700
+    tomato_4: 700
+    tomato_5: 700
+    tomato_6: 700
+    tomato_7: 700
+    tomato_8: 700
+Pinch:
+    comb: 0
+    food_bag: 0
+    glue_stick: 0
+    keyboard: 0
+    marker: 0
+    plate: 0
+    rubber_eraser: 0
+    shampoo: 0
+    toothbrush: 0
+Pinch/comb:
+    comb_1: 605
+    comb_2: 605
+    comb_3: 605
+    comb_5: 605
+Pinch/food_bag:
+    food_bag_1: 798
+    food_bag_2: 798
+    food_bag_3: 798
+    food_bag_4: 798
+    food_bag_5: 798
+    food_bag_6: 798
+    food_bag_7: 798
+    food_bag_8: 798
+Pinch/glue_stick:
+    glue_stick_1: 801
+    glue_stick_2: 801
+    glue_stick_3: 801
+    glue_stick_4: 801
+    glue_stick_5: 801
+    glue_stick_6: 801
+Pinch/keyboard:
+    keyboard_1: 709
+    keyboard_2: 709
+    keyboard_3: 709
+    keyboard_4: 709
+    keyboard_5: 709
+Pinch/marker:
+    marker_1: 810
+    marker_2: 810
+    marker_3: 810
+    marker_4: 810
+    marker_5: 810
+    marker_6: 810
+    marker_7: 810
+    marker_8: 810
+    marker_9: 810
+Pinch/plate:
+    plate_1: 712
+    plate_2: 712
+    plate_3: 712
+    plate_4: 712
+    plate_5: 712
+    plate_6: 712
+    plate_7: 712
+Pinch/rubber_eraser:
+    rubber_eraser_1: 790
+    rubber_eraser_2: 790
+    rubber_eraser_3: 790
+    rubber_eraser_4: 790
+Pinch/shampoo:
+    shampoo_1: 852
+    shampoo_2: 852
+    shampoo_3: 852
+    shampoo_4: 852
+    shampoo_5: 852
+    shampoo_6: 852
+Pinch/toothbrush:
+    toothbrush_1: 605
+    toothbrush_2: 605
+    toothbrush_3: 605
+    toothbrush_4: 605
+    toothbrush_5: 605
+Tripod:
+    binder: 0
+    bowl: 0
+    calculator: 0
+    cap: 0
+    cell_phone: 0
+    cereal_box: 0
+    dry_battery: 0
+    food_box: 0
+    garlic: 0
+    hand_towel: 0
+    instant_noodles: 0
+    lightbulb: 0
+    mushroom: 0
+    notebook: 0
+    onion: 0
+    pear: 0
+    scissors: 0
+    stapler: 0
+Tripod/binder:
+    binder_1: 727
+    binder_2: 727
+    binder_3: 727
+Tripod/bowl:
+    bowl_1: 806
+    bowl_2: 806
+    bowl_3: 806
+    bowl_4: 806
+    bowl_5: 806
+    bowl_6: 806
+Tripod/calculator:
+    calculator_1: 632
+    calculator_2: 632
+    calculator_3: 632
+    calculator_4: 632
+    calculator_5: 632
+Tripod/cap:
+    cap_1: 668
+    cap_2: 668
+    cap_3: 668
+    cap_4: 668
+Tripod/cell_phone:
+    cell_phone_1: 545
+    cell_phone_2: 545
+    cell_phone_3: 545
+    cell_phone_4: 545
+    cell_phone_5: 545
+Tripod/cereal_box:
+    cereal_box_1: 615
+    cereal_box_2: 615
+    cereal_box_3: 615
+    cereal_box_4: 615
+    cereal_box_5: 615
+Tripod/dry_battery:
+    dry_battery_1: 569
+    dry_battery_2: 569
+    dry_battery_3: 569
+    dry_battery_4: 569
+    dry_battery_5: 569
+    dry_battery_6: 569
+Tripod/food_box:
+    food_box_1: 825
+    food_box_10: 825
+    food_box_11: 825
+    food_box_12: 825
+    food_box_2: 825
+    food_box_3: 825
+    food_box_4: 825
+    food_box_5: 825
+    food_box_6: 825
+    food_box_7: 825
+    food_box_8: 825
+    food_box_9: 825
+Tripod/garlic:
+    garlic_1: 801
+    garlic_2: 801
+    garlic_3: 801
+    garlic_4: 801
+    garlic_5: 801
+    garlic_6: 801
+    garlic_7: 801
+Tripod/hand_towel:
+    hand_towel_1: 797
+    hand_towel_2: 797
+    hand_towel_3: 797
+    hand_towel_4: 797
+    hand_towel_5: 797
+Tripod/instant_noodles:
+    instant_noodles_1: 814
+    instant_noodles_2: 814
+    instant_noodles_3: 814
+    instant_noodles_4: 814
+    instant_noodles_5: 814
+    instant_noodles_6: 814
+    instant_noodles_7: 814
+    instant_noodles_8: 814
+Tripod/lightbulb:
+    lightbulb_1: 634
+    lightbulb_2: 634
+    lightbulb_3: 634
+    lightbulb_4: 634
+Tripod/mushroom:
+    mushroom_1: 778
+    mushroom_2: 778
+    mushroom_3: 778
+Tripod/notebook:
+    notebook_1: 810
+    notebook_2: 810
+    notebook_3: 810
+    notebook_4: 810
+    notebook_5: 810
+Tripod/onion:
+    onion_1: 797
+    onion_2: 797
+    onion_3: 797
+    onion_4: 797
+    onion_5: 797
+    onion_6: 797
+Tripod/pear:
+    pear_1: 761
+    pear_2: 761
+    pear_3: 761
+    pear_4: 761
+    pear_7: 761
+    pear_8: 761
+Tripod/scissors:
+    scissors_1: 625
+    scissors_2: 625
+    scissors_3: 625
+    scissors_4: 625
+Tripod/stapler:
+    stapler_1: 823
+    stapler_2: 823
+    stapler_3: 823
+    stapler_4: 823
+    stapler_5: 823
+    stapler_6: 823
+    stapler_7: 823
+    stapler_8: 823
+==================================================================
+
+Palmar wrist neutral: 33436
+    c1: 6448
+    c2: 11508
+    c3: 3020
+    c4: 1698
+    c5: 3698
+    c6: 7064
+
+Palmar wrist pronated: 66194
