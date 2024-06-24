@@ -2,6 +2,7 @@
 Contains functions for training and testing a PyTorch model.
 """
 import torch
+
 from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
@@ -33,29 +34,22 @@ def train_step(model: torch.nn.Module,
     model.train()
 
     # Setup train loss and train accuracy values
-    train_loss, train_correct = 0, 0
-    num_samples = 0
+    train_loss, train_acc = 0, 0
 
     # Loop through data loader data batches
-    for batch, (X_list, y) in tqdm(enumerate(dataloader), total=len(dataloader)):
-        # Concatenate the list of tensors along the batch dimension
-        X = torch.cat(X_list, dim=0).to(device)
-        y = y.to(device)
+    for batch, (X, y) in tqdm(enumerate(dataloader), total=len(dataloader)):
+        # Send data to target device
+        X, y = X.to(device), y.to(device)
 
         # 1. Forward pass
-        y_pred = model(X)
-
-        # 2. Calculate and accumulate loss
-        if isinstance(y_pred, list):
-            loss_list = [loss_fn(o, y) / len(y_pred) for o in y_pred]
-            loss = sum(loss_list)
-            y_pred_class = torch.max(sum(y_pred), 1)[1]
-        else:
-            loss = loss_fn(y_pred, y)
-            y_pred_class = torch.argmax(y_pred, dim=1)
+        y_preds = model(X)
+        y_pred = torch.cat(y_preds, dim=1) if isinstance(y_preds, list) else y_preds
+#         y_pred = torch.cat(y_pred,dim=1)
+        #print(y)
         
-        train_loss += loss.item() * y.size(0)
-        num_samples += y.size(0)
+        # 2. Calculate  and accumulate loss
+        loss = loss_fn(y_pred, y)
+        train_loss += loss.item() 
 
         # 3. Optimizer zero grad
         optimizer.zero_grad()
@@ -67,11 +61,12 @@ def train_step(model: torch.nn.Module,
         optimizer.step()
 
         # Calculate and accumulate accuracy metric across all batches
-        train_correct += (y_pred_class == y).sum().item()
+        y_pred_class = torch.argmax(torch.softmax(y_pred, dim=1), dim=1)
+        train_acc += (y_pred_class == y).sum().item()/len(y_pred)
 
-    # Adjust metrics to get average loss and accuracy per sample
-    train_loss = train_loss / num_samples
-    train_acc = train_correct / num_samples
+    # Adjust metrics to get average loss and accuracy per batch 
+    train_loss = train_loss / len(dataloader)
+    train_acc = train_acc / len(dataloader)
     return train_loss, train_acc
 
 def val_step(model: torch.nn.Module, 
@@ -99,38 +94,30 @@ def val_step(model: torch.nn.Module,
     model.eval() 
 
     # Setup val loss and val accuracy values
-    val_loss, val_correct = 0, 0
-    num_samples = 0
+    val_loss, val_acc = 0, 0
 
     # Turn on inference context manager
     with torch.inference_mode():
         # Loop through DataLoader batches
-        for batch, (X_list, y) in tqdm(enumerate(dataloader), total=len(dataloader)):
-            # Concatenate the list of tensors along the batch dimension
-            X = torch.cat(X_list, dim=0).to(device)
-            y = y.to(device)
+        for batch, (X, y) in tqdm(enumerate(dataloader), total=len(dataloader)):
+            # Send data to target device
+            X, y = X.to(device), y.to(device)
 
             # 1. Forward pass
             val_pred_logits = model(X)
+            val_pred_logit = torch.cat(val_pred_logits, dim=1) if isinstance(val_pred_logits, list) else val_pred_logits
 
             # 2. Calculate and accumulate loss
-            if isinstance(val_pred_logits, list):
-                loss_list = [loss_fn(o, y) / len(val_pred_logits) for o in val_pred_logits]
-                loss = sum(loss_list)
-                val_pred_labels = torch.max(sum(val_pred_logits), 1)[1]
-            else:
-                loss = loss_fn(val_pred_logits, y)
-                val_pred_labels = val_pred_logits.argmax(dim=1)
-            
-            val_loss += loss.item() * y.size(0)
-            num_samples += y.size(0)
+            loss = loss_fn(val_pred_logits, y)
+            val_loss += loss.item()
 
             # Calculate and accumulate accuracy
-            val_correct += ((val_pred_labels == y).sum().item())
+            val_pred_labels = val_pred_logits.argmax(dim=1)
+            val_acc += ((val_pred_labels == y).sum().item()/len(val_pred_labels))
 
-    # Adjust metrics to get average loss and accuracy per sample 
-    val_loss = val_loss / num_samples
-    val_acc = val_correct / num_samples
+    # Adjust metrics to get average loss and accuracy per batch 
+    val_loss = val_loss / len(dataloader)
+    val_acc = val_acc / len(dataloader)
     return val_loss, val_acc
 
 def train(model: torch.nn.Module, 
