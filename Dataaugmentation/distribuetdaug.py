@@ -227,70 +227,53 @@ def balance_subfolder_images(base_path, main_folder, subfolder_name, additional_
         augmented_image.save(os.path.join(subfolder_path, new_image_name))
 
 # Base directory paths containing all the subfolders
-base_directory = "/home/srikanth/Interns/RGB_images/Palmar wrist neutral"
+base_directory = "/home/srikanth/Interns/Hit-GPRec-merged/Palmar wrist neutral"
 
 # Current number of images in each subfolder
 subfolder_counts = {
-    'coffee_mug': {
-        'coffee_mug_1': 1584,
-        'coffee_mug_2': 1584,
-        'coffee_mug_3': 1584,
-        'coffee_mug_4': 1584,
-        'coffee_mug_5': 1584,
-        'coffee_mug_6': 1584,
-        'coffee_mug_7': 1584,
-        'coffee_mug_8': 1584
-    },
-    'food_can': {
-            'food_can_1': 1266,
-            'food_can_2': 1266,
-            'food_can_3': 1266,
-            'food_can_4': 1266,
-            'food_can_5': 1266,
-            'food_can_6': 1266,
-            'food_can_7': 1266,
-            'food_can_8': 1266,
-            'food_can_9': 1266,
-            'food_can_10': 1266,
-            'food_can_11': 1266,
-            'food_can_12': 1266,
-            'food_can_13': 1266,
-            'food_can_14': 1266
-        },
-        'greens': {
-            'greens_1': 2310,
-            'greens_2': 2310,
-            'greens_3': 2310,
-            'greens_4': 2310
-        },
-        'pitcher': {
-            'pitcher_1': 2640,
-            'pitcher_2': 2640,
-            'pitcher_3': 2640
-        },
-        'soda_can': {
-            'soda_can_1': 1665,
-            'soda_can_2': 1665,
-            'soda_can_3': 1665,
-            'soda_can_4': 1665,
-            'soda_can_5': 1665,
-            'soda_can_6': 1665
-        },
-        'water_bottle': {
-            'water_bottle_1': 1476,
-            'water_bottle_2': 1476,
-            'water_bottle_3': 1476,
-            'water_bottle_4': 1476,
-            'water_bottle_5': 1476,
-            'water_bottle_6': 1476,
-            'water_bottle_7': 1476,
-            'water_bottle_9': 1476,
-            'water_bottle_10': 1476
-        }
+    "01": 408,
+    "02": 408,
+    "03": 408,
+    "04": 408,
+    "05": 408,
+    "06": 408,
+    "07": 408,
+    "08": 408,
+    "09": 408,
+    "10": 408,
+    "11": 408,
+    "12": 408,
+    "13": 408,
+    "14": 408,
+    "15": 408,
+    "16": 408,
+    "17": 408,
+    "18": 408,
+    "19": 408,
+    "20": 408,
+    "21": 408,
+    "22": 408,
+    "23": 408,
+    "24": 408,
+    "25": 408,
+    "26": 408,
+    "27": 408,
+    "28": 408,
+    "29": 408,
+    "30": 408,
+    "31": 408,
+    "32": 408,
+    "33": 408,
+    "34": 408,
+    "35": 408
 }
 
 # Total images to add
-total_images_to_add = 75000 - sum(sum(inner_dict.values()) for inner_dict in subfolder_counts.values())
+#FOR RGB IMAGES
+# total_images_to_add = 24000 - sum(sum(inner_dict.values()) for inner_dict in subfolder_counts.values())
+#FOR HITGPREC
+current_total_images = sum(subfolder_counts.values())
+total_images_to_add = 24000 - current_total_images
 
 # Calculate additional images needed per subfolder
 additional_images_needed = calculate_additional_images({key: sum(value.values()) for key, value in subfolder_counts.items()}, total_images_to_add)

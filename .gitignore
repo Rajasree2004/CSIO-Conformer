@@ -2,3 +2,5 @@ supercomputer-log.txt
 conformer-wwc-rgbd.pth
 conformerwwcrgb.pkl
 conformer-wwc-hitgprec.pth
+conformer-boc-rgbd.pth
+weight

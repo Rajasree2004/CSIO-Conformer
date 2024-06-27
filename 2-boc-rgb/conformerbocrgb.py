@@ -1,3 +1,13 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[58]:
+
+
+get_ipython().run_line_magic('pip', 'install einops')
+
+
+# In[59]:
 
 
 import os
@@ -14,6 +24,7 @@ from sklearn.preprocessing import LabelEncoder , OneHotEncoder
 from sklearn.utils import shuffle
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
 
 import torch
 import torchvision
@@ -22,17 +33,29 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 from einops import rearrange
 
+
+# In[60]:
+
+
 device = "cuda" if torch.cuda.is_available() else "cpu"
 device
 
+
+# In[61]:
 
 
 module_path = '/home/srikanth/Downloads/conformer_helpers'
 sys.path.append(os.path.dirname(module_path))
 
 
+# In[62]:
+
+
 module_path = '/home/srikanth/Downloads/going_modular'
 sys.path.append(os.path.dirname(module_path))
+
+
+# In[63]:
 
 
 from going_modular.helper_functions import set_seeds
@@ -40,9 +63,20 @@ from going_modular import engine_new
 from going_modular.helper_functions import plot_loss_curves
 
 
+# In[64]:
 
-root_path = r"/home/srikanth/Dataset/RGB_images"
+
+# from conformer_helpers import engine
+
+
+# In[65]:
+
+
+root_path = r"/home/srikanth/Interns/RGB_images"
 dataset_path = os.listdir(root_path)
+
+
+# In[66]:
 
 
 class_labels = []
@@ -60,11 +94,16 @@ y=list(df['labels'].values)
 image=df['image']
 
 
+# In[67]:
+
+
 f_dataloader = DataLoader(
       df,
       batch_size=16,
       shuffle=True)
 
+
+# In[68]:
 
 
 labels = df['labels'].unique()
@@ -77,6 +116,8 @@ for i, label in enumerate(labels):
 print(label2id)
 print(id2label)
 
+
+# In[69]:
 
 
 class ImageDataset():
@@ -122,7 +163,7 @@ class ImageDataset():
         return train_images, train_labels
 
 
-# In[47]:
+# In[70]:
 
 
 def create_dataloaders(train_df,test_df,val_df,batch_size: int):
@@ -151,13 +192,14 @@ def create_dataloaders(train_df,test_df,val_df,batch_size: int):
     return train_dataloader, test_dataloader, val_dataloader, class_names
 
 
-# In[48]:
+# In[71]:
 
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from functools import partial
+
 from timm.models.layers import DropPath, trunc_normal_
 
 class Mlp(nn.Module):
@@ -458,8 +500,7 @@ class ConvTransBlock(nn.Module):
         return x, x_t
 
 
-
-# In[49]:
+# In[72]:
 
 
 class Conformer(nn.Module):
@@ -604,10 +645,112 @@ class Conformer(nn.Module):
         return [conv_cls, tran_cls]
 
 
+# In[73]:
+
 
 LR=0.0001
-EPOCHS=40
+EPOCHS=1
 BATCH_SIZE = 16
+
+
+from tqdm import tqdm
+# import torch
+
+def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device):
+    best_acc = 0.0
+    min_loss = min_val_loss
+
+    train_losses = []
+    train_accs = []
+    val_losses = []
+    val_accs = []
+
+    for epoch in range(num_epochs):
+        print(f'Epoch {epoch}/{num_epochs - 1}')
+        print('-' * 10)
+        model.train()  # Set model to training mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        # Using tqdm for progress tracking
+        for inputs, labels in tqdm(train_loader, desc=f'Epoch {epoch}', leave=False):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward
+            # track history if only in train
+            with torch.set_grad_enabled(True):
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+                # backward + optimize only if in training phase
+                loss.backward()
+                optimizer.step()
+
+            # statistics
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(train_loader.dataset)
+        epoch_acc = running_corrects.double() / len(train_loader.dataset)
+
+        train_losses.append(epoch_loss)
+        train_accs.append(epoch_acc)
+        print(f'Train Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Validation phase
+        model.eval()  # Set model to evaluate mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        for inputs, labels in val_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            with torch.no_grad():
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(val_loader.dataset)
+        epoch_acc = running_corrects.double() / len(val_loader.dataset)
+
+        val_losses.append(epoch_loss)
+        val_accs.append(epoch_acc)
+        print(f'Val Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Update the learning rate
+        # scheduler.step()  # Uncomment if using a learning rate scheduler
+
+        # Save the model if it has the best validation accuracy so far
+        if epoch_acc > best_acc:
+            best_acc = epoch_acc
+            state = {
+                'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'min_loss': epoch_loss
+            }
+        torch.save(state, '/home/srikanth/Interns/Rajasree/CSIO-Conformer/weight/conformer-boc-rgbd.pth')
+
+    return train_losses, train_accs, val_losses, val_accs, min_loss
 
 
 features = [item[1] for item in class_labels]
@@ -684,34 +827,69 @@ for train_indices, test_indices in kfold.split(features, labels):
 
     # Setup the loss function for multi-class classification
     loss_fn = torch.nn.CrossEntropyLoss()
+    min_val_loss = float('inf')
 
     # Set the seeds
     #set_seeds()
     # Train the model and save the training results to a dictionary
-    model_results = engine_new.train_step(model=model,
-                           train_dataloader=train_gen,
-                           valid_dataloader=valid_gen,
-                           optimizer=optimizer,
-                           loss_fn=loss_fn,
-                           epochs=EPOCHS,
-                           device=device)
-    average_validation_accuracy.append(model_results["test_acc"])
+    
+    train_losses, train_accs, val_losses, val_accs, min_loss = trainVal(model, loss_fn, optimizer, EPOCHS, min_val_loss, train_gen, valid_gen, device)
 
-##############################################################################################################################################
-    # we can use the plot_loss_curves function from helper_functions.py
-    # Plot our ViT model's loss curves
-    plot_loss_curves(model_results)
+    
+    # Convert the tensors to NumPy arrays
+
+    train_losses = torch.tensor(train_losses)
+    val_losses = torch.tensor(val_losses)
+    train_accs = torch.tensor(train_accs)
+    val_accs = torch.tensor(val_accs)
+
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.plot(train_losses, label='Training Loss')
+    plt.plot(val_losses, label='Validation Loss')
+    plt.legend()
+    plt.title('Loss')
+
+    plt.subplot(1, 2, 2)
+    plt.plot(train_accs, label='Training Accuracy')
+    plt.plot(val_accs, label='Validation Accuracy')
+    plt.legend()
+    plt.title('Accuracy')
+    filename = f'plot_boc_rgb_{i+1}.png'
+    plt.savefig(filename)
+
+    
 
 
-#############################################################################################################################################
+    #############################################################################################################################################
     # EVALUATION
+    # model.eval()
+    # y_true=[]
+    # y_pred=[]
+    # for _,(image, label) in enumerate(test_gen):
+    #     y_true.extend(label.cpu().numpy())
+    #     prediction =torch.argmax(torch.softmax(model(image.to(device)),dim=1),dim=1)
+    #     prediction=prediction.cpu().numpy()
+    #     y_pred.extend(prediction)
     model.eval()
-    y_true=[]
-    y_pred=[]
-    for _,(image, label) in enumerate(test_gen):
+    y_true = []
+    y_pred = []
+
+    for _, (image, label) in enumerate(test_gen):
         y_true.extend(label.cpu().numpy())
-        prediction =torch.argmax(torch.softmax(model(image.to(device)),dim=1),dim=1)
-        prediction=prediction.cpu().numpy()
+        outputs = model(image.to(device))
+
+        # Handle the case where the output is a list of tensors
+        if isinstance(outputs, list):
+            batch_predictions = []
+            for output in outputs:
+                batch_predictions.append(torch.argmax(torch.softmax(output, dim=1), dim=1))
+            # For simplicity, use the first output for prediction evaluation
+            prediction = batch_predictions[0]
+        else:
+            prediction = torch.argmax(torch.softmax(outputs, dim=1), dim=1)
+
+        prediction = prediction.cpu().numpy()
         y_pred.extend(prediction)
 
 
@@ -730,4 +908,87 @@ for train_indices, test_indices in kfold.split(features, labels):
     print(f"Precision: {precision}")
     print(f"Recall: {recall}")
     print(f"F1 score: {f1}")
+
+
+# def test(model):
+#     model.eval()
+
+#     Sum = 0
+#     for inputs, labels in test_gen:
+#         inputs = inputs.to(device)
+#         labels = labels.to(device)
+#         output = model(inputs).to(device).float()
+
+#         _,prediction = torch.max(output,1)
+
+#         pred_label = labels[prediction]
+#         pred_label = pred_label.detach().cpu().numpy()
+#         main_label = labels.detach().cpu().numpy()
+#         bool_list  = list(map(lambda x, y: x == y, pred_label, main_label))
+#         Sum += sum(np.array(bool_list)*1)
+
+#     print('Prediction: ', (Sum/len(test_gen.dataset)*100,'%'))
+
+
+# # In[ ]:
+
+
+# test(model)
+
+
+# In[ ]:
+
+
+test_losses = []
+test_accuracies = []
+
+all_preds = []
+all_labels = []
+model.eval()
+total_test_loss = 0.0
+correct_test = 0
+with torch.no_grad():
+    for images, labels in test_loader:
+        images, labels = images.to(device), labels.to(device)
+        outputs = model(images)
+        
+        # If the model outputs a list of tensors
+        if isinstance(outputs, list):
+            batch_loss = 0.0
+            for output in outputs:
+                batch_loss += criterion(output, labels).item()
+            test_loss = batch_loss / len(outputs)
+            total_test_loss += test_loss * images.size(0)
+
+            # For simplicity, assuming the first output for prediction evaluation
+            output = outputs[0]
+        else:
+            test_loss = criterion(outputs, labels).item()
+            total_test_loss += test_loss * images.size(0)
+            output = outputs
+
+        pred = output.argmax(dim=1, keepdim=True)
+        correct_test += pred.eq(labels.view_as(pred)).sum().item()
+        
+        # Gather predictions and true labels for confusion matrix
+        all_preds.extend(pred.cpu().numpy())
+        all_labels.extend(labels.cpu().numpy())
+
+average_test_loss = total_test_loss / len(test_loader.dataset)
+test_losses.append(average_test_loss)
+test_accuracies.append(100. * correct_test / len(test_loader.dataset))
+print("Test Accuracy: {:.2f}%".format(test_accuracies[-1]))
+
+
+
+
+from sklearn.metrics import confusion_matrix, classification_report
+# Confusion Matrix
+conf_matrix = confusion_matrix(all_labels, all_preds)
+print("Confusion Matrix:")
+print(conf_matrix)
+# Classification Report
+class_report = classification_report(all_labels, all_preds)
+print("Classification Report:")
+print(class_report)
 

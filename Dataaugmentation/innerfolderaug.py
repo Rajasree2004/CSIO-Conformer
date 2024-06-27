@@ -52,5 +52,5 @@ def balance_images(base_path):
                         augmented_image.save(os.path.join(dir_path, new_image_name))
 
 # Base directory path containing all the folders
-base_directory = "/home/srikanth/Interns/RGB_images"
+base_directory = "/home/srikanth/Interns/Hit-GPRec-merged"
 balance_images(base_directory)

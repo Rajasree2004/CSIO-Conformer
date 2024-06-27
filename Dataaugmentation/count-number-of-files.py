@@ -69,7 +69,7 @@ def print_folder_structure(folder_structure):
     print(f"Total Items: {total_sum}")
 
 # Specify the root directory of the folder structure you want to read
-root_directory = '/home/srikanth/Interns/RGB_images'
+root_directory = '/home/srikanth/Interns/Hit-GPRec-merged'
 
 # Get the folder structure with file counts up to the specified depth
 folder_structure = count_files_in_directory(root_directory)
@@ -135,7 +135,7 @@ def print_folder_structure(folder_structure):
                     print(f"        {subsubfolder}: {subcount}")
 
 # Specify the root directory of the folder structure you want to read
-root_directory = '/home/srikanth/Interns/RGB_images'
+root_directory = '/home/srikanth/Interns/Hit-GPRec-merged'
 
 # Get the folder structure with file counts up to the specified depth
 folder_structure = count_files_in_directory(root_directory)
