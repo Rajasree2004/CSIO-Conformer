@@ -1,0 +1,98 @@
+from tqdm import tqdm
+import torch
+
+def trainVal(model, criterion, optimizer, num_epochs, min_val_loss, train_loader, val_loader, device):
+    best_acc = 0.0
+    min_loss = min_val_loss
+
+    train_losses = []
+    train_accs = []
+    val_losses = []
+    val_accs = []
+
+    for epoch in range(num_epochs):
+        print(f'Epoch {epoch}/{num_epochs - 1}')
+        print('-' * 10)
+        model.train()  # Set model to training mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        # Using tqdm for progress tracking
+        for inputs, labels in tqdm(train_loader, desc=f'Epoch {epoch}', leave=False):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            # zero the parameter gradients
+            optimizer.zero_grad()
+
+            # forward
+            # track history if only in train
+            with torch.set_grad_enabled(True):
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+                # backward + optimize only if in training phase
+                loss.backward()
+                optimizer.step()
+
+            # statistics
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(train_loader.dataset)
+        epoch_acc = running_corrects.double() / len(train_loader.dataset)
+
+        train_losses.append(epoch_loss)
+        train_accs.append(epoch_acc)
+        print(f'Train Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Validation phase
+        model.eval()  # Set model to evaluate mode
+        running_loss = 0.0
+        running_corrects = 0
+
+        for inputs, labels in val_loader:
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+
+            with torch.no_grad():
+                outputs = model(inputs)
+                if isinstance(outputs, list):
+                    loss_list = [criterion(o, labels) / len(outputs) for o in outputs]
+                    loss = sum(loss_list)
+                    preds = torch.max(outputs[0] + outputs[1], 1)[1]
+                else:
+                    loss = criterion(outputs, labels)
+                    _, preds = torch.max(outputs, 1)
+
+            running_loss += loss.item() * inputs.size(0)
+            running_corrects += torch.sum(preds == labels.data)
+
+        epoch_loss = running_loss / len(val_loader.dataset)
+        epoch_acc = running_corrects.double() / len(val_loader.dataset)
+
+        val_losses.append(epoch_loss)
+        val_accs.append(epoch_acc)
+        print(f'Val Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
+
+        # Update the learning rate
+        # scheduler.step()  # Uncomment if using a learning rate scheduler
+
+        # Save the model if it has the best validation accuracy so far
+        if epoch_acc > best_acc:
+            best_acc = epoch_acc
+            state = {
+                'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
+                'optimizer': optimizer.state_dict(),
+                'min_loss': epoch_loss
+            }
+        torch.save(state, '/home/srikanth/Interns/Rajasree/CSIO-Conformer/weight/simple-cnn.pth')
+
+    return train_losses, train_accs, val_losses, val_accs, min_loss
